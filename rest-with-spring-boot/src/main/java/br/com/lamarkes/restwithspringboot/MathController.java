@@ -22,10 +22,15 @@ public class MathController {
     }
 
     private Double convertToDouble(String strNum) {
-        return null;
+        if (strNum == null) return 0D;
+        String number = strNum.replaceAll(",",".");
+        if (isNumeric(number)) return Double.parseDouble(number);
+        return 0D;
     }
 
     private boolean isNumeric(String strNum) {
-        return false;
+        if (strNum == null) return false;
+        String number = strNum.replaceAll(",",".");
+        return number.matches("[-+]?[0-9]*\\.?[0-9]+");
     }
 }
