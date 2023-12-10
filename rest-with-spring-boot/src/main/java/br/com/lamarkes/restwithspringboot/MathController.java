@@ -22,8 +22,8 @@ public class MathController {
         return convertToDouble(numberOne) + convertToDouble(numberTwo);
     }
 
-    @RequestMapping(value = "/minus/{numberOne}/{numberTwo}", method = RequestMethod.GET)
-    public Double minus(
+    @RequestMapping(value = "/subtraction/{numberOne}/{numberTwo}", method = RequestMethod.GET)
+    public Double subtraction(
             @PathVariable(value = "numberOne") String numberOne,
             @PathVariable(value = "numberTwo") String numberTwo){
 
@@ -32,7 +32,7 @@ public class MathController {
         }
         return convertToDouble(numberOne) - convertToDouble(numberTwo);
     }
-    @RequestMapping(value = "/mult/{numberOne}/{numberTwo}", method = RequestMethod.GET)
+    @RequestMapping(value = "/multiplication/{numberOne}/{numberTwo}", method = RequestMethod.GET)
         public Double multiplication(
                 @PathVariable(value = "numberOne") String numberOne,
                 @PathVariable(value = "numberTwo") String numberTwo){
@@ -53,8 +53,8 @@ public class MathController {
             return convertToDouble(numberOne) / convertToDouble(numberTwo);
         }
 
-        @RequestMapping(value = "/average/{numberOne}/{numberTwo}", method = RequestMethod.GET)
-        public Double average(
+        @RequestMapping(value = "/mean/{numberOne}/{numberTwo}", method = RequestMethod.GET)
+        public Double mean(
                 @PathVariable(value = "numberOne") String numberOne,
                 @PathVariable(value = "numberTwo") String numberTwo){
 
