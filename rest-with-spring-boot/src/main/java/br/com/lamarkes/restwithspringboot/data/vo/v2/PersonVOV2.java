@@ -3,9 +3,11 @@ package br.com.lamarkes.restwithspringboot.data.vo.v2;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Objects;
 
 
-public class PersonVO implements Serializable {
+public class PersonVOV2 implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -16,8 +18,9 @@ public class PersonVO implements Serializable {
     private String lastName;
     private String address;
     private String gender;
+    private Date birthDay;
 
-    public PersonVO(){}
+    public PersonVOV2(){}
 
     public Long getId() {
         return id;
@@ -59,4 +62,23 @@ public class PersonVO implements Serializable {
         this.gender = gender;
     }
 
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PersonVOV2 that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

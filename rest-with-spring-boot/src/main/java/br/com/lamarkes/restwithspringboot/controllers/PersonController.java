@@ -1,5 +1,6 @@
 package br.com.lamarkes.restwithspringboot.controllers;
 import br.com.lamarkes.restwithspringboot.data.vo.v1.PersonVO;
+import br.com.lamarkes.restwithspringboot.data.vo.v2.PersonVOV2;
 import br.com.lamarkes.restwithspringboot.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/person/v1")
+@RequestMapping("/api/person/v1")
 public class PersonController {
 
     @Autowired
@@ -34,6 +35,15 @@ public class PersonController {
 
         return service.createPerson(person);
     }
+
+    @PostMapping(value = "/v2", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonVOV2 createV2(
+            @RequestBody PersonVOV2 person) {
+
+        return service.createPersonV2(person);
+    }
+
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public PersonVO update(
