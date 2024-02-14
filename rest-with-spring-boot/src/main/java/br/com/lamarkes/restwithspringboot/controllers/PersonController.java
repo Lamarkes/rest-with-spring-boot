@@ -1,5 +1,5 @@
 package br.com.lamarkes.restwithspringboot.controllers;
-import br.com.lamarkes.restwithspringboot.model.Person;
+import br.com.lamarkes.restwithspringboot.data.vo.v1.PersonVO;
 import br.com.lamarkes.restwithspringboot.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,18 +10,18 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/person/v1")
 public class PersonController {
 
     @Autowired
     private PersonService service;
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Person> findAll(){
+    public List<PersonVO> findAll(){
         return service.findAll();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person findBdyId(
+    public PersonVO findBdyId(
             @PathVariable(value = "id") Long id) {
 
         return service.findById(id);
@@ -29,15 +29,15 @@ public class PersonController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person create(
-            @RequestBody Person person) {
+    public PersonVO create(
+            @RequestBody PersonVO person) {
 
         return service.createPerson(person);
     }
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person update(
-            @RequestBody Person person) {
+    public PersonVO update(
+            @RequestBody PersonVO person) {
 
         return service.updatePerson(person);
     }

@@ -1,6 +1,8 @@
 package br.com.lamarkes.restwithspringboot.services;
 
+import br.com.lamarkes.restwithspringboot.data.vo.v1.PersonVO;
 import br.com.lamarkes.restwithspringboot.exceptions.ResourceNotFoundException;
+import br.com.lamarkes.restwithspringboot.mapper.Mapper;
 import br.com.lamarkes.restwithspringboot.model.Person;
 import br.com.lamarkes.restwithspringboot.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,43 +18,50 @@ public class PersonService {
     @Autowired
     PersonRepository personRepository;
 
-    public List<Person> findAll(){
+    public List<PersonVO> findAll(){
         logger.info("Finding all people!");
-        return personRepository.findAll();
+        return Mapper.parseListObjects(personRepository.findAll(), PersonVO.class);
     }
 
-    public Person findById(Long id){
-        logger.info("Finding one Person!");
+    public PersonVO findById(Long id){
+        logger.info("Finding one person!");
 
-        return personRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("No records found for this id!"));
-    }
-
-    public Person createPerson(Person person){
-
-        logger.info("Creating one Person!");
-
-        return personRepository.save(person);
-    }
-
-    public Person updatePerson(Person person){
-
-        logger.info("Updating one Person!");
-        Person entity = personRepository.findById(person.getId()).orElseThrow(
+        var entity = personRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No records found for this id!"));
 
-        entity.setFirstName(person.getFirstName());
-        entity.setLastName(person.getLastName());
-        entity.setAddress(person.getAddress());
-        entity.setGender(person.getGender());
+        return Mapper.parseObject(entity, PersonVO.class);
+    }
 
-        return personRepository.save(person);
+    public PersonVO createPerson(PersonVO personVO){
+
+        logger.info("Creating one person!");
+        var entity = Mapper.parseObject(personVO, Person.class);
+
+        var vo = Mapper.parseObject(personRepository.save(entity),PersonVO.class);
+
+        return vo;
+    }
+
+    public PersonVO updatePerson(PersonVO personVO){
+
+        logger.info("Updating one PersonVO!");
+        var entity = personRepository.findById(personVO.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("No records found for this id!"));
+
+        entity.setFirstName(personVO.getFirstName());
+        entity.setLastName(personVO.getLastName());
+        entity.setAddress(personVO.getAddress());
+        entity.setGender(personVO.getGender());
+
+        var vo = Mapper.parseObject(personRepository.save(entity),PersonVO.class);
+
+        return vo;
     }
 
     public void deletePerson(Long id){
 
-        logger.info("Deleting one Person!");
-        Person entity = personRepository.findById(id).orElseThrow(
+        logger.info("Deleting one PersonVO!");
+        var entity = personRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No records found for this id!"));
 
 
