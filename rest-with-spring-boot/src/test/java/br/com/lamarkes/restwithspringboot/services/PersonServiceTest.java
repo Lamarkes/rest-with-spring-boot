@@ -1,5 +1,6 @@
 package br.com.lamarkes.restwithspringboot.services;
 
+import br.com.lamarkes.restwithspringboot.data.vo.v1.PersonVO;
 import br.com.lamarkes.restwithspringboot.model.Person;
 import br.com.lamarkes.restwithspringboot.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,15 +40,14 @@ class PersonServiceTest {
 
     @Test
     void findById() {
-        Person person = input.mockEntity(1);
-        person.setId(1L);
-        when(repository.findById(1L)).thenReturn(Optional.of(person));
+        Person entity = input.mockEntity(1);
+        entity.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(entity));
 
         var result = service.findById(1L);
         assertNotNull(result);
         assertNotNull(result.getKey());
         assertNotNull(result.getLinks());
-        System.out.println(result.toString());
         assertTrue(result.toString().contains("[</api/person/v1/1>;rel=\"self\"]"));
         assertEquals("Addres Test1", result.getAddress());
         assertEquals("First Name Test1", result.getFirstName());
@@ -61,17 +61,55 @@ class PersonServiceTest {
 
     @Test
     void createPerson() {
-    }
+        Person entity = input.mockEntity(1);
+        Person persisted = entity;
+        persisted.setId(1L);
 
-    @Test
-    void createPersonV2() {
+        PersonVO vo = input.mockVO(1);
+        vo.setKey(1L);
+        when(repository.save(entity)).thenReturn(persisted);
+
+        var result = service.createPerson(vo);
+        assertNotNull(result);
+        assertNotNull(result.getKey());
+        assertNotNull(result.getLinks());
+        assertTrue(result.toString().contains("[</api/person/v1/1>;rel=\"self\"]"));
+        assertEquals("Addres Test1", result.getAddress());
+        assertEquals("First Name Test1", result.getFirstName());
+        assertEquals("Female", result.getGender());
+        assertEquals("Last Name Test1", result.getLastName());
+
     }
 
     @Test
     void updatePerson() {
+        Person entity = input.mockEntity(1);
+        Person persisted = entity;
+        persisted.setId(1L);
+
+        PersonVO vo = input.mockVO(1);
+        vo.setKey(1L);
+
+        when(repository.findById(1L)).thenReturn(Optional.of(entity));
+        when(repository.save(entity)).thenReturn(persisted);
+
+        var result = service.updatePerson(vo);
+        assertNotNull(result);
+        assertNotNull(result.getKey());
+        assertNotNull(result.getLinks());
+        assertTrue(result.toString().contains("[</api/person/v1/1>;rel=\"self\"]"));
+        assertEquals("Addres Test1", result.getAddress());
+        assertEquals("First Name Test1", result.getFirstName());
+        assertEquals("Female", result.getGender());
+        assertEquals("Last Name Test1", result.getLastName());
     }
 
     @Test
     void deletePerson() {
+        Person entity = input.mockEntity(1);
+        entity.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(entity));
+
+        service.deletePerson(1L);
     }
 }
