@@ -1,5 +1,6 @@
 package br.com.lamarkes.restwithspringboot.services;
 
+import br.com.lamarkes.restwithspringboot.controllers.PersonController;
 import br.com.lamarkes.restwithspringboot.data.vo.v1.PersonVO;
 import br.com.lamarkes.restwithspringboot.data.vo.v2.PersonVOV2;
 import br.com.lamarkes.restwithspringboot.exceptions.ResourceNotFoundException;
@@ -8,6 +9,8 @@ import br.com.lamarkes.restwithspringboot.mapper.PersonMapper;
 import br.com.lamarkes.restwithspringboot.model.Person;
 import br.com.lamarkes.restwithspringboot.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +28,9 @@ public class PersonService {
 
     public List<PersonVO> findAll(){
         logger.info("Finding all people!");
-        return Mapper.parseListObjects(personRepository.findAll(), PersonVO.class);
+        var persons = Mapper.parseListObjects(personRepository.findAll(), PersonVO.class);
+        persons.forEach(p-> p.add(linkTo(methodOn(PersonController.class).findBdyId(p.getKey())).withSelfRel()));
+        return persons;
     }
 
     public PersonVO findById(Long id){
@@ -34,7 +39,9 @@ public class PersonService {
         var entity = personRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("No records found for this id!"));
 
-        return Mapper.parseObject(entity, PersonVO.class);
+        var vo = Mapper.parseObject(entity, PersonVO.class);
+        vo.add(linkTo(methodOn(PersonController.class).findBdyId(id)).withSelfRel());
+        return vo;
     }
 
     public PersonVO createPerson(PersonVO personVO){
@@ -43,7 +50,7 @@ public class PersonService {
         var entity = Mapper.parseObject(personVO, Person.class);
 
         var vo = Mapper.parseObject(personRepository.save(entity),PersonVO.class);
-
+        vo.add(linkTo(methodOn(PersonController.class).findBdyId(vo.getKey())).withSelfRel());
         return vo;
     }
 
@@ -60,7 +67,7 @@ public class PersonService {
     public PersonVO updatePerson(PersonVO personVO){
 
         logger.info("Updating one PersonVO!");
-        var entity = personRepository.findById(personVO.getId()).orElseThrow(
+        var entity = personRepository.findById(personVO.getKey()).orElseThrow(
                 () -> new ResourceNotFoundException("No records found for this id!"));
 
         entity.setFirstName(personVO.getFirstName());
@@ -69,7 +76,7 @@ public class PersonService {
         entity.setGender(personVO.getGender());
 
         var vo = Mapper.parseObject(personRepository.save(entity),PersonVO.class);
-
+        vo.add(linkTo(methodOn(PersonController.class).findBdyId(vo.getKey())).withSelfRel());
         return vo;
     }
 
