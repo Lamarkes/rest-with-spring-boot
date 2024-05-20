@@ -3,6 +3,7 @@ package br.com.lamarkes.restwithspringboot.services;
 import br.com.lamarkes.restwithspringboot.controllers.PersonController;
 import br.com.lamarkes.restwithspringboot.data.vo.v1.PersonVO;
 import br.com.lamarkes.restwithspringboot.data.vo.v2.PersonVOV2;
+import br.com.lamarkes.restwithspringboot.exceptions.RequiredObjectIsNullException;
 import br.com.lamarkes.restwithspringboot.exceptions.ResourceNotFoundException;
 import br.com.lamarkes.restwithspringboot.mapper.Mapper;
 import br.com.lamarkes.restwithspringboot.mapper.PersonMapper;
@@ -46,6 +47,8 @@ public class PersonService {
 
     public PersonVO createPerson(PersonVO personVO){
 
+        if (personVO == null) throw new RequiredObjectIsNullException();
+
         logger.info("Creating one person!");
         var entity = Mapper.parseObject(personVO, Person.class);
 
@@ -65,6 +68,7 @@ public class PersonService {
     }
 
     public PersonVO updatePerson(PersonVO personVO){
+        if (personVO == null) throw new RequiredObjectIsNullException();
 
         logger.info("Updating one PersonVO!");
         var entity = personRepository.findById(personVO.getKey()).orElseThrow(
